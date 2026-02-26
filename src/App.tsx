@@ -34,26 +34,49 @@ export default function App() {
 
   // Initialize with EMPTY items as requested
   const [items, setItems] = useState<Item[]>(() => {
-    const saved = localStorage.getItem('sayonako_items');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('sayonako_items');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Failed to load items", e);
+      return [];
+    }
   });
 
   const [categories, setCategories] = useState<string[]>(() => {
-    const saved = localStorage.getItem('sayonako_categories');
-    return saved ? JSON.parse(saved) : ['Drinks', 'Snacks', 'Others'];
+    try {
+      const saved = localStorage.getItem('sayonako_categories');
+      return saved ? JSON.parse(saved) : ['Drinks', 'Snacks', 'Others'];
+    } catch (e) {
+      console.error("Failed to load categories", e);
+      return ['Drinks', 'Snacks', 'Others'];
+    }
   });
 
   const [sales, setSales] = useState<Record<string, number>>(() => {
-    const saved = localStorage.getItem('sayonako_sales');
-    return saved ? JSON.parse(saved) : {};
+    try {
+      const saved = localStorage.getItem('sayonako_sales');
+      return saved ? JSON.parse(saved) : {};
+    } catch (e) {
+      console.error("Failed to load sales", e);
+      return {};
+    }
   });
 
   const [history, setHistory] = useState<HistoryEntry[]>(() => {
-    const saved = localStorage.getItem('sayonako_history');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('sayonako_history');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Failed to load history", e);
+      return [];
+    }
   });
 
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    return localStorage.getItem('sayonako_selected_category') || 'All';
+  });
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -88,6 +111,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('sayonako_history', JSON.stringify(history));
   }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem('sayonako_selected_category', selectedCategory);
+  }, [selectedCategory]);
 
   const handleAddItem = (newItem: any) => {
     const item: Item = {
