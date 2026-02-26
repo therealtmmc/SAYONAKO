@@ -53,6 +53,9 @@ export default defineConfig(({mode}) => {
           theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
+          start_url: '/',
+          scope: '/',
+          orientation: 'portrait',
           icons: [
             {
               src: 'favicon.svg',

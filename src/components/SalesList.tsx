@@ -1,6 +1,7 @@
-import { Save, Minus } from 'lucide-react';
+import { Save, Minus, Download } from 'lucide-react';
 import { KahootCard } from './KahootCard';
 import { KahootButton } from './KahootButton';
+import { InstallPWA } from './InstallPWA';
 
 interface SalesListProps {
   sales: Record<string, number>;
@@ -64,7 +65,7 @@ export function SalesList({ sales, items, total, onCloseDay, onDecrement }: Sale
         )}
       </div>
 
-      <div className="mt-6 pt-4 border-t-2 border-slate-100">
+      <div className="mt-6 pt-4 border-t-2 border-slate-100 space-y-3">
         <KahootButton 
           onClick={onCloseDay}
           variant="success"
@@ -74,6 +75,10 @@ export function SalesList({ sales, items, total, onCloseDay, onDecrement }: Sale
           <Save className="w-6 h-6" />
           Close & Save Day
         </KahootButton>
+
+        <div className="lg:hidden">
+          <InstallPWA />
+        </div>
       </div>
     </KahootCard>
   );
