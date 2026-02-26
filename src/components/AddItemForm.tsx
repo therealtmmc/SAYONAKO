@@ -14,6 +14,7 @@ interface AddItemFormProps {
 export function AddItemForm({ categories, onAdd, onCancel, onAddCategory, onDeleteCategory }: AddItemFormProps) {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
+  const [quantity, setQuantity] = useState('');
   const [category, setCategory] = useState(categories[0] || '');
   
   // Liquid options
@@ -36,11 +37,12 @@ export function AddItemForm({ categories, onAdd, onCancel, onAddCategory, onDele
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !price || !category) return;
+    if (!name || !price || !category || !quantity) return;
     
     onAdd({
       name,
       price: parseFloat(price),
+      quantity: parseInt(quantity),
       category,
       liquidDetails: isLiquid ? { volume: parseFloat(volume), unit } : undefined
     });
@@ -48,6 +50,7 @@ export function AddItemForm({ categories, onAdd, onCancel, onAddCategory, onDele
     // Reset form
     setName('');
     setPrice('');
+    setQuantity('');
     setIsLiquid(false);
     setVolume('');
   };
@@ -68,18 +71,33 @@ export function AddItemForm({ categories, onAdd, onCancel, onAddCategory, onDele
               required
             />
           </div>
-          <div>
-            <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Price (₱)</label>
-            <input
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border-2 border-slate-200 focus:border-blue-500 focus:outline-none font-bold text-slate-700"
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-              required
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Price (₱)</label>
+              <input
+                type="number"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border-2 border-slate-200 focus:border-blue-500 focus:outline-none font-bold text-slate-700"
+                placeholder="0.00"
+                min="0"
+                step="0.01"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-slate-500 mb-1 uppercase">Stock Qty</label>
+              <input
+                type="number"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                className="w-full px-3 py-2 rounded-lg border-2 border-slate-200 focus:border-blue-500 focus:outline-none font-bold text-slate-700"
+                placeholder="0"
+                min="0"
+                step="1"
+                required
+              />
+            </div>
           </div>
         </div>
 

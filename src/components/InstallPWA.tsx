@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 import { Download } from 'lucide-react';
 import { KahootButton } from './KahootButton';
 import { PopupModal } from './PopupModal';
 
 interface InstallPWAProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 

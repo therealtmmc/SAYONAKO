@@ -10,10 +10,12 @@ export function DigitalClock() {
   }, []);
 
   return (
-    <div className="bg-slate-800 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl font-mono font-bold flex items-center gap-2 shadow-inner border-2 border-slate-600 text-xs sm:text-sm">
-      <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-green-400" />
-      <span className="whitespace-nowrap">
-        {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}
+    <div className="bg-white text-slate-900 px-8 py-2 sm:py-3 rounded-full font-black flex items-center justify-center gap-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] border-[5px] border-black text-xl sm:text-2xl transform hover:scale-105 transition-transform cursor-default min-w-[220px]">
+      <div className="bg-blue-500 rounded-full p-1">
+        <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-white" strokeWidth={3} />
+      </div>
+      <span className="whitespace-nowrap tracking-widest font-mono pt-1">
+        {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
       </span>
     </div>
   );
