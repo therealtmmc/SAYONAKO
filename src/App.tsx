@@ -8,6 +8,7 @@ import { PopupModal } from './components/PopupModal';
 import { PurchaseModal } from './components/PurchaseModal';
 import { LoadingScreen } from './components/LoadingScreen';
 import { DigitalClock } from './components/DigitalClock';
+import { InstallPWA } from './components/InstallPWA';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Item {
@@ -273,6 +274,8 @@ export default function App() {
           
           <div className="flex items-center gap-2 sm:gap-4">
             <DigitalClock />
+            
+            <InstallPWA />
 
             <KahootButton 
               variant="secondary" 
