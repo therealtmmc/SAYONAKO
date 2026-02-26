@@ -264,9 +264,11 @@ export default function App() {
       <header className="bg-white p-4 shadow-lg border-b-4 border-slate-200 sticky top-4 z-30 mx-4 rounded-2xl mt-4 space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <div className="bg-red-500 p-2 rounded-xl border-b-4 border-red-700 shadow-sm rotate-[-3deg]">
-              <Store className="w-6 h-6 text-white" />
-            </div>
+            <InstallPWA className="hover:scale-110 transition-transform cursor-pointer active:scale-95">
+              <div className="bg-red-500 p-2 rounded-xl border-b-4 border-red-700 shadow-sm rotate-[-3deg]">
+                <Store className="w-6 h-6 text-white" />
+              </div>
+            </InstallPWA>
             <div>
               <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black tracking-tighter uppercase text-slate-800 drop-shadow-sm leading-none">Sayonako</h1>
             </div>
@@ -275,8 +277,6 @@ export default function App() {
           <div className="flex items-center gap-2 sm:gap-4">
             <DigitalClock />
             
-            <InstallPWA />
-
             <KahootButton 
               variant="secondary" 
               onClick={() => setShowHistory(true)}
@@ -364,13 +364,13 @@ export default function App() {
                 layout
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ y: -4 }}
+                whileHover={{ scale: 1.03, y: -5 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative group"
               >
                 <button 
                   onClick={() => initiatePurchase(item.id)}
-                  className="w-full text-left bg-white rounded-2xl sm:rounded-3xl shadow-sm border-b-4 sm:border-b-8 border-slate-200 overflow-hidden hover:border-blue-400 hover:shadow-xl transition-all active:border-b-0 active:mt-2 active:shadow-none h-full flex flex-col duration-200 p-4"
+                  className="w-full text-left bg-white rounded-2xl sm:rounded-3xl shadow-sm border-b-4 sm:border-b-8 border-slate-200 overflow-hidden hover:border-blue-500 hover:shadow-xl transition-all active:border-b-0 active:mt-2 active:shadow-none h-full flex flex-col duration-200 p-4"
                 >
                   <div className="flex flex-col h-full justify-center items-center text-center gap-2">
                     <h3 className="font-black text-slate-800 leading-tight text-lg sm:text-xl line-clamp-2">{item.name}</h3>
@@ -389,7 +389,7 @@ export default function App() {
                 
                 <button
                   onClick={(e) => confirmDeleteItem(item.id, e)}
-                  className="absolute -top-2 -left-2 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 focus:opacity-100 hover:scale-110 z-10 border-4 border-white lg:opacity-0 lg:group-hover:opacity-100 transition-all"
+                  className="absolute -top-2 -left-2 p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600 focus:opacity-100 z-10 border-4 border-white transition-all duration-200 lg:opacity-0 lg:scale-50 lg:group-hover:opacity-100 lg:group-hover:scale-100"
                   title="Delete Item"
                 >
                   <Trash2 className="w-4 h-4" />
