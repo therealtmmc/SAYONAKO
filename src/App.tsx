@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ShoppingBag, Store, History, Trash2, Check, AlertTriangle, Menu, X, Search, Package } from 'lucide-react';
+import { ShoppingBag, Store, History, Trash2, Check, AlertTriangle, Menu, X, Search, Package, PiggyBank } from 'lucide-react';
 import { KahootButton } from './components/KahootButton';
 import { AddItemForm } from './components/AddItemForm';
 import { SalesList } from './components/SalesList';
@@ -10,6 +10,7 @@ import { LoadingScreen } from './components/LoadingScreen';
 import { DigitalClock } from './components/DigitalClock';
 import { InstallPWA } from './components/InstallPWA';
 import { StorageView } from './components/StorageView';
+import { SavingsView, SavingsGoal } from './components/SavingsView';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface Item {
@@ -35,7 +36,7 @@ interface HistoryEntry {
 
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [currentView, setCurrentView] = useState<'sell' | 'storage'>('sell');
+  const [currentView, setCurrentView] = useState<'sell' | 'storage' | 'savings'>('sell');
   const [isNavOpen, setIsNavOpen] = useState(false);
 
   // Initialize with EMPTY items as requested
@@ -79,6 +80,16 @@ export default function App() {
     }
   });
 
+  const [savings, setSavings] = useState<SavingsGoal[]>(() => {
+    try {
+      const saved = localStorage.getItem('sayonako_savings');
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error("Failed to load savings", e);
+      return [];
+    }
+  });
+
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     return localStorage.getItem('sayonako_selected_category') || 'All';
   });
@@ -117,6 +128,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('sayonako_history', JSON.stringify(history));
   }, [history]);
+
+  useEffect(() => {
+    localStorage.setItem('sayonako_savings', JSON.stringify(savings));
+  }, [savings]);
 
   useEffect(() => {
     localStorage.setItem('sayonako_selected_category', selectedCategory);
@@ -283,6 +298,38 @@ export default function App() {
     }
   };
 
+  // Savings Handlers
+  const handleAddSavingsGoal = (goal: Omit<SavingsGoal, 'id' | 'currentAmount' | 'history'>) => {
+    const newGoal: SavingsGoal = {
+      ...goal,
+      id: Date.now().toString(),
+      currentAmount: 0,
+      history: []
+    };
+    setSavings([...savings, newGoal]);
+  };
+
+  const handleAddMoneyToSavings = (id: string, amount: number) => {
+    setSavings(savings.map(goal => {
+      if (goal.id === id) {
+        return {
+          ...goal,
+          currentAmount: goal.currentAmount + amount,
+          history: [...goal.history, {
+            id: Date.now().toString(),
+            amount: amount,
+            date: new Date().toISOString()
+          }]
+        };
+      }
+      return goal;
+    }));
+  };
+
+  const handleDeleteSavingsGoal = (id: string) => {
+    setSavings(savings.filter(s => s.id !== id));
+  };
+
   const filteredItems = items.filter(item => {
     const matchesCategory = selectedCategory === 'All' || item.category === selectedCategory;
     const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
@@ -375,6 +422,18 @@ export default function App() {
                 >
                   <Package className="w-6 h-6" />
                   Storage
+                </button>
+
+                <button 
+                  onClick={() => { setCurrentView('savings'); setIsNavOpen(false); }}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border-b-4 transition-all font-bold text-lg ${
+                    currentView === 'savings' 
+                      ? 'bg-pink-50 border-pink-200 text-pink-600' 
+                      : 'bg-white border-slate-100 text-slate-600 hover:bg-slate-50'
+                  }`}
+                >
+                  <PiggyBank className="w-6 h-6" />
+                  Savings
                 </button>
               </div>
             </motion.div>
@@ -539,12 +598,19 @@ export default function App() {
               <span className="font-black uppercase tracking-wide">Checkout</span>
             </button>
           </div>
-        ) : (
+        ) : currentView === 'storage' ? (
           <StorageView 
             items={items} 
             onUpdateItem={handleUpdateItem} 
             onDeleteItem={confirmDeleteItem}
             onAddItem={() => setShowAddForm(true)}
+          />
+        ) : (
+          <SavingsView 
+            savings={savings}
+            onAddGoal={handleAddSavingsGoal}
+            onAddMoney={handleAddMoneyToSavings}
+            onDeleteGoal={handleDeleteSavingsGoal}
           />
         )}
       </main>
